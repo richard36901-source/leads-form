@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoScale – השאירו פרטים</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #0d1b3e;
+      --blue:   #1565c0;
+      --sky:    #29b6f6;
+      --cyan:   #00e5ff;
+      --white:  #ffffff;
+      --glass:  rgba(255,255,255,0.06);
+      --glass-border: rgba(255,255,255,0.12);
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'Heebo', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── animated background ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 10%, rgba(21,101,192,0.45) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 85% 80%, rgba(0,229,255,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(13,27,62,0.8) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* grid lines overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── layout ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── header ── */
+    header {
+      width: 100%;
+      padding: 32px 40px 0;
+      display: flex;
+      justify-content: center;
+      animation: fadeDown 0.7s ease both;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-wrap img {
+      height: 56px;
+      width: auto;
+      filter: drop-shadow(0 0 18px rgba(41,182,246,0.5));
+    }
+
+    /* ── hero text ── */
+    .hero {
+      text-align: center;
+      padding: 48px 24px 0;
+      animation: fadeUp 0.8s 0.15s ease both;
+    }
+
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(0,229,255,0.15), rgba(21,101,192,0.2));
+      border: 1px solid rgba(0,229,255,0.3);
+      border-radius: 100px;
+      padding: 6px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--cyan);
+      letter-spacing: 0.08em;
+      margin-bottom: 22px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 900;
+      line-height: 1.15;
+      background: linear-gradient(135deg, #ffffff 30%, var(--sky) 70%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-weight: 300;
+      color: rgba(255,255,255,0.65);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── trust strip ── */
+    .trust {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 36px 24px 0;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 400;
+    }
+
+    .trust-item .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+      flex-shrink: 0;
+    }
+
+    /* ── form card ── */
+    .card {
+      margin: 40px 24px 60px;
+      width: 100%;
+      max-width: 720px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 10px;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04) inset,
+        0 32px 80px rgba(0,0,0,0.45),
+        0 0 60px rgba(21,101,192,0.15);
+      animation: fadeUp 0.9s 0.45s ease both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* glowing top edge */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 15%; right: 15%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--sky), var(--cyan), var(--sky), transparent);
+      opacity: 0.6;
+    }
+
+    .card iframe {
+      width: 100%;
+      min-height: 560px;
+      border: none;
+      border-radius: 16px;
+      display: block;
+    }
+
+    /* ── footer ── */
+    footer {
+      padding: 0 24px 36px;
+      text-align: center;
+      font-size: 13px;
+      color: rgba(255,255,255,0.3);
+      animation: fadeUp 0.8s 0.6s ease both;
+    }
+
+    footer a {
+      color: var(--sky);
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── responsive ── */
+    @media (max-width: 600px) {
+      header { padding: 24px 20px 0; }
+      .trust { gap: 18px; }
+      .card { margin: 28px 12px 48px; padding: 6px; }
+      .card iframe { min-height: 680px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="logo-wrap">
+      <!-- Place logo.png in the same folder as this file -->
+      <img src="logo.png" alt="AutoScale" onerror="this.style.display='none'" />
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="badge">✦ בואו נגדל יחד</div>
+    <h1>מוכנים לקחת את העסק<br/>לשלב הבא?</h1>
+    <p>השאירו פרטים ונחזור אליכם תוך 24 שעות עם תוכנית פעולה מותאמת אישית.</p>
+  </section>
+
+  <div class="trust">
+    <div class="trust-item"><span class="dot"></span>אוטומציה חכמה</div>
+    <div class="trust-item"><span class="dot"></span>ליווי אישי מלא</div>
+    <div class="trust-item"><span class="dot"></span>תוצאות מדידות</div>
+  </div>
+
+  <div class="card">
+    <iframe
+      src="https://forms.monday.com/forms/embed/7e544267be75abec9ca444f1827c9e99?r=use1"
+      title="טופס פנייה AutoScale"
+      loading="lazy"
+      allowtransparency="true"
+    ></iframe>
+  </div>
+
+  <footer>
+    <p>© 2026 AutoScale · <a href="mailto:info@autoscale.co.il">info@autoscale.co.il</a></p>
+  </footer>
+
+</div>
+</body>
+</html>
